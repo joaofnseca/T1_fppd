@@ -1,31 +1,46 @@
 package main
 
 import (
-	"fmt"
-	"time"
+     "fmt"
+     "time"
 )
 
-const ciclos = 20
-const pensar = 20 * time.Millisecond
-const comer = 30 * time.Millisecond
+func Philosopher(id, iteration int) {
+     time_to_think := 2
+     time_to_eat := 3
 
-var concluidos [5]int
+     // think
+     for s := 1; s <= id*6; s++ {
+          fmt.Printf(" ")
+          }
+     fmt.Printf(" T%d\n", iteration) // Thinking
+     time.Sleep(time.Duration(time_to_think) * time.Second)
 
-func filosofo(id int) {
-	time.Sleep(pensar)
-	time.Sleep(comer)
-	concluidos[id]++
+     // eat
+
+     for s := 1; s <= id*6; s++ {
+          fmt.Printf(" ")
+          }
+     fmt.Printf(" E%d\n", iteration) // Eating
+     time.Sleep(time.Duration(time_to_eat) * time.Second)
 }
 
 func main() {
-	inicio := time.Now()
-	for rodada := 0; rodada < ciclos; rodada++ {
-		for id := 0; id < 5; id++ {
-			filosofo(id)
-		}
-	}
-	total := time.Since(inicio)
-	fmt.Printf("Tempo total: %s\n", total)
-	fmt.Println("Espera media: 0; maior espera: 0; maximo comendo: 1")
-	fmt.Println("Ciclos por filosofo:", concluidos)
+     philosophers := 5
+     rounds := 5
+
+     fmt.Println("\n[P1] [P2] [P3] [P4] [P5]\n")
+ 
+     // run philosophers
+
+     start := time.Now()
+
+     for i := 1; i <= rounds; i++ {
+          for j := 0; j < philosophers; j++ {
+               Philosopher(j, i)
+          }
+     }
+     elapsed := time.Since(start)
+
+     fmt.Printf("\nSequential Dinner took %s\n\n", elapsed)
 }
