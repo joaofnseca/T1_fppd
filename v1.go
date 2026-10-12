@@ -6,36 +6,57 @@ import (
 	"time"
 )
 
-const ciclos = 20
-const pensar = 20 * time.Millisecond
-const comer = 30 * time.Millisecond
+const philosophers = 5
+const rounds = 5
 
-var garfos [5]sync.Mutex
-var pares = [5][2]int{{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 0}}
-var grupo, barreira sync.WaitGroup
+const time_to_think = 2 * time.Second
+const time_to_eat = 3 * time.Second
 
-func filosofo(id int) {
-	primeiro, segundo := pares[id][0], pares[id][1]
-	for rodada := 0; rodada < ciclos; rodada++ {
-		time.Sleep(pensar)
-		garfos[primeiro].Lock()
-		fmt.Printf("F%d possui G%d e espera G%d\n", id, primeiro, segundo)
-		barreira.Done()
-		barreira.Wait()
-		garfos[segundo].Lock()
+var forks [philosophers]sync.Mutex
 
-		time.Sleep(comer)
-		garfos[segundo].Unlock()
-		garfos[primeiro].Unlock()
+func Philosopher(id, iteration int, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	// think
+	for s := 1; s <= id*6; s++ {
+		fmt.Printf(" ")
 	}
-	grupo.Done()
+	fmt.Printf(" T%d\n", iteration)
+	time.Sleep(time_to_think)
+
+	// pick up left fork, then right fork (deadlock-prone order)
+	left := id
+	right := (id + 1) % philosophers
+
+	forks[left].Lock()
+	fmt.Printf("Philosopher %d picked up fork %d (left), waiting for fork %d (right)\n", id, left, right)
+	forks[right].Lock()
+
+	// eat
+	for s := 1; s <= id*6; s++ {
+		fmt.Printf(" ")
+	}
+	fmt.Printf(" E%d\n", iteration)
+	time.Sleep(time_to_eat)
+
+	forks[right].Unlock()
+	forks[left].Unlock()
 }
 
 func main() {
-	barreira.Add(5)
-	grupo.Add(5)
-	for id := 0; id < 5; id++ {
-		go filosofo(id)
+	fmt.Println("\n[P1] [P2] [P3] [P4] [P5]\n")
+
+	start := time.Now()
+
+	for i := 1; i <= rounds; i++ {
+		var wg sync.WaitGroup
+		for j := 0; j < philosophers; j++ {
+			wg.Add(1)
+			go Philosopher(j, i, &wg)
+		}
+		wg.Wait()
 	}
-	grupo.Wait()
+
+	elapsed := time.Since(start)
+	fmt.Printf("\nParallel Dinner took %s\n\n", elapsed)
 }
