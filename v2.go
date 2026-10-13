@@ -28,7 +28,10 @@ func Filosofo(id, iteracao int, wg *sync.WaitGroup) {
 	// mutex global garante que só um filósofo pega garfos por vez
 	mutex.Lock()
 	esquerda := id
-	direita := (id + 1) % filosofos
+	direita := id + 1
+	if direita == filosofos { 
+		direita = 0
+	}
 	garfos[esquerda].Lock()
 	garfos[direita].Lock()
 	mutex.Unlock()
