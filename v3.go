@@ -25,14 +25,18 @@ func Filosofo(id, iteracao int, wg *sync.WaitGroup) {
 	time.Sleep(tempo_pra_pensar)
 
 	// ordenação global: sempre pega o garfo de menor índice primeiro
-	primeiro := id
-	segundo := (id + 1) % filosofos
-	if segundo < primeiro {
-		primeiro, segundo = segundo, primeiro
+	esquerda := id
+	direita := id + 1
+
+	// se true, completamos a volta na mesa
+	if direita == filosofos {
+		direita = 0 // Garfo da direita passa a ser o primeiro garfo da mesa
+		esquerda, direita = direita, esquerda // inverte os garfos de mão para travar o menor primeiro
+											  // e quebrar o ciclo
 	}
 
-	garfos[primeiro].Lock()
-	garfos[segundo].Lock()
+	garfos[esquerda].Lock()
+	garfos[direita].Lock()
 
 	// come
 	for s := 1; s <= id*6; s++ {
@@ -41,8 +45,8 @@ func Filosofo(id, iteracao int, wg *sync.WaitGroup) {
 	fmt.Printf(" E%d\n", iteracao)
 	time.Sleep(tempo_pra_comer)
 
-	garfos[segundo].Unlock()
-	garfos[primeiro].Unlock()
+	garfos[direita].Unlock()
+	garfos[esquerda].Unlock()
 }
 
 func main() {
