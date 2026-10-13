@@ -6,58 +6,58 @@ import (
 	"time"
 )
 
-const philosophers = 5
+const filosofos = 5
 const rounds = 5
 
-const time_to_think = 2 * time.Second
-const time_to_eat = 3 * time.Second
+const tempo_pra_pensar = 2 * time.Second
+const tempo_pra_comer = 3 * time.Second
 
-var forks [philosophers]sync.Mutex
+var garfos [filosofos]sync.Mutex
 var mutex sync.Mutex
 
-func Philosopher(id, iteration int, wg *sync.WaitGroup) {
+func Filosofo(id, iteracao int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	// think
+	// pensa
 	for s := 1; s <= id*6; s++ {
 		fmt.Printf(" ")
 	}
-	fmt.Printf(" T%d\n", iteration)
-	time.Sleep(time_to_think)
+	fmt.Printf(" T%d\n", iteracao)
+	time.Sleep(tempo_pra_pensar)
 
 	// mutex global garante que só um filósofo pega garfos por vez
 	mutex.Lock()
-	left := id
-	right := (id + 1) % philosophers
-	forks[left].Lock()
-	forks[right].Lock()
+	esquerda := id
+	direita := (id + 1) % filosofos
+	garfos[esquerda].Lock()
+	garfos[direita].Lock()
 	mutex.Unlock()
 
-	// eat
+	// come
 	for s := 1; s <= id*6; s++ {
 		fmt.Printf(" ")
 	}
-	fmt.Printf(" E%d\n", iteration)
-	time.Sleep(time_to_eat)
+	fmt.Printf(" E%d\n", iteracao)
+	time.Sleep(tempo_pra_comer)
 
-	forks[right].Unlock()
-	forks[left].Unlock()
+	garfos[direita].Unlock()
+	garfos[esquerda].Unlock()
 }
 
 func main() {
 	fmt.Println("\n[P1] [P2] [P3] [P4] [P5]")
 
-	start := time.Now()
+	comeco := time.Now()
 
 	for i := 1; i <= rounds; i++ {
 		var wg sync.WaitGroup
-		for j := 0; j < philosophers; j++ {
+		for j := 0; j < filosofos; j++ {
 			wg.Add(1)
-			go Philosopher(j, i, &wg)
+			go Filosofo(j, i, &wg)
 		}
 		wg.Wait()
 	}
 
-	elapsed := time.Since(start)
-	fmt.Printf("\nParallel Dinner took %s\n\n", elapsed)
+	fim := time.Since(comeco)
+	fmt.Printf("\nJantar Paralelo levou %s\n\n", fim)
 }

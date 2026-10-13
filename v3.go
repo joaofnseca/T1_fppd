@@ -6,59 +6,59 @@ import (
 	"time"
 )
 
-const philosophers = 5
+const filosofos = 5
 const rounds = 5
 
-const time_to_think = 2 * time.Second
-const time_to_eat = 3 * time.Second
+const tempo_pra_pensar = 2 * time.Second
+const tempo_pra_comer = 3 * time.Second
 
-var forks [philosophers]sync.Mutex
+var garfos [filosofos]sync.Mutex
 
-func Philosopher(id, iteration int, wg *sync.WaitGroup) {
+func Filosofo(id, iteracao int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	// think
+	// pensa
 	for s := 1; s <= id*6; s++ {
 		fmt.Printf(" ")
 	}
-	fmt.Printf(" T%d\n", iteration)
-	time.Sleep(time_to_think)
+	fmt.Printf(" T%d\n", iteracao)
+	time.Sleep(tempo_pra_pensar)
 
 	// ordenação global: sempre pega o garfo de menor índice primeiro
-	first := id
-	second := (id + 1) % philosophers
-	if second < first {
-		first, second = second, first
+	primeiro := id
+	segundo := (id + 1) % filosofos
+	if segundo < primeiro {
+		primeiro, segundo = segundo, primeiro
 	}
 
-	forks[first].Lock()
-	forks[second].Lock()
+	garfos[primeiro].Lock()
+	garfos[segundo].Lock()
 
-	// eat
+	// come
 	for s := 1; s <= id*6; s++ {
 		fmt.Printf(" ")
 	}
-	fmt.Printf(" E%d\n", iteration)
-	time.Sleep(time_to_eat)
+	fmt.Printf(" E%d\n", iteracao)
+	time.Sleep(tempo_pra_comer)
 
-	forks[second].Unlock()
-	forks[first].Unlock()
+	garfos[segundo].Unlock()
+	garfos[primeiro].Unlock()
 }
 
 func main() {
 	fmt.Println("\n[P1] [P2] [P3] [P4] [P5]")
 
-	start := time.Now()
+	comeco := time.Now()
 
 	for i := 1; i <= rounds; i++ {
 		var wg sync.WaitGroup
-		for j := 0; j < philosophers; j++ {
+		for j := 0; j < filosofos; j++ {
 			wg.Add(1)
-			go Philosopher(j, i, &wg)
+			go Filosofo(j, i, &wg)
 		}
 		wg.Wait()
 	}
 
-	elapsed := time.Since(start)
-	fmt.Printf("\nParallel Dinner took %s\n\n", elapsed)
+	fim := time.Since(comeco)
+	fmt.Printf("\nJantar Paralelo levou %s\n\n", fim)
 }

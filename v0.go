@@ -5,42 +5,42 @@ import (
 	"time"
 )
 
-func Philosopher(id, iteration int) {
-     time_to_think := 2
-	time_to_eat := 3
+func Filosofo(id, iteracao int) {
+     tempo_pra_pensar := 2
+	tempo_pra_comer := 3
 
-	// think
+	// pensa
 	for s := 1; s <= id*6; s++ {
 		fmt.Printf(" ")
 	}
-	fmt.Printf(" T%d\n", iteration) // Thinking
-	time.Sleep(time.Duration(time_to_think) * time.Second)
+	fmt.Printf(" T%d\n", iteracao) // Pensando
+	time.Sleep(time.Duration(tempo_pra_pensar) * time.Second)
 
 	// eat
 
 	for s := 1; s <= id*6; s++ {
 		fmt.Printf(" ")
 	}
-	fmt.Printf(" E%d\n", iteration) // Eating
-	time.Sleep(time.Duration(time_to_eat) * time.Second)
+	fmt.Printf(" E%d\n", iteracao) // COmendo
+	time.Sleep(time.Duration(tempo_pra_comer) * time.Second)
 }
 
 func main() {
-	philosophers := 5
+	filosofos := 5
 	rounds := 5
 
 	fmt.Println("\n[P1] [P2] [P3] [P4] [P5]\n")
 
-	// run philosophers
+	// roda filosofos
 
-	start := time.Now()
+	comeco := time.Now()
 
 	for i := 1; i <= rounds; i++ {
-		for j := 0; j < philosophers; j++ {
-			Philosopher(j, i)
+		for j := 0; j < filosofos; j++ {
+			Filosofo(j, i)
 		}
 	}
-	elapsed := time.Since(start)
+	fim := time.Since(comeco)
 
-	fmt.Printf("\nSequential Dinner took %s\n\n", elapsed)
+	fmt.Printf("\nJantar Sequencial levou %s\n\n", fim)
 }
