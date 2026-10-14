@@ -9,8 +9,8 @@ import (
 const filosofos = 5
 const rounds = 5
 
-const tempo_pra_pensar = 20 * time.Millisecond
-const tempo_pra_comer = 30 * time.Millisecond
+const tempo_pra_pensar = 2 * time.Millisecond
+const tempo_pra_comer = 3 * time.Millisecond
 
 var garfos [filosofos]sync.Mutex
 var mutex sync.Mutex
@@ -34,7 +34,6 @@ func Filosofo(id, iteracao int, wg *sync.WaitGroup) {
 	}
 	garfos[esquerda].Lock()
 	garfos[direita].Lock()
-	mutex.Unlock()
 
 	// come
 	for s := 1; s <= id*6; s++ {
@@ -45,6 +44,7 @@ func Filosofo(id, iteracao int, wg *sync.WaitGroup) {
 
 	garfos[direita].Unlock()
 	garfos[esquerda].Unlock()
+	mutex.Unlock()
 }
 
 func main() {
