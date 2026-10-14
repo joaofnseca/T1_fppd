@@ -14,7 +14,7 @@ func Filosofo(id, iteracao int) {
 		fmt.Printf(" ")
 	}
 	fmt.Printf(" T%d\n", iteracao) // Pensando
-	time.Sleep(time.Duration(tempo_pra_pensar) * time.Second)
+	time.Sleep(time.Duration(tempo_pra_pensar) * time.Millisecond)
 
 	// eat
 
@@ -22,7 +22,7 @@ func Filosofo(id, iteracao int) {
 		fmt.Printf(" ")
 	}
 	fmt.Printf(" E%d\n", iteracao) // COmendo
-	time.Sleep(time.Duration(tempo_pra_comer) * time.Second)
+	time.Sleep(time.Duration(tempo_pra_comer) * time.Millisecond)
 }
 
 func main() {

@@ -9,8 +9,8 @@ import (
 const filosofos = 5
 const rounds = 5
 
-const tempo_pra_pensar = 2 * time.Second
-const tempo_pra_comer = 3 * time.Second
+const tempo_pra_pensar = 2 * time.Millisecond
+const tempo_pra_comer = 3 * time.Millisecond
 
 var garfos [filosofos]sync.Mutex
 
@@ -26,7 +26,10 @@ func Filosofo(id, iteracao int, wg *sync.WaitGroup) {
 
 	// pega o garfo da esquerda, e depois o da direita
 	esquerda := id
-	direita := (id + 1) % filosofos
+	direita := id + 1
+	if direita == filosofos {
+		direita = 0
+	}
 
 	garfos[esquerda].Lock()
 	fmt.Printf("Filosofo %d pegou o garfo %d (esquerda), esperando o garfo %d (direita)\n", id, esquerda, direita)

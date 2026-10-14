@@ -9,8 +9,8 @@ import (
 const filosofos = 5
 const rounds = 5
 
-const tempo_pra_pensar = 2 * time.Second
-const tempo_pra_comer = 3 * time.Second
+const tempo_pra_pensar = 2 * time.Millisecond
+const tempo_pra_comer = 3 * time.Millisecond
 
 var garfos [filosofos]sync.Mutex
 
